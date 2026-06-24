@@ -985,9 +985,12 @@
        CAMERA / TOWER CAM LAYOUT
        ================================================================ */
     body.cam-mode #map {
-      left: 310px;
-      right: 300px;
-      width: auto;
+      left: 310px !important;
+      right: 300px !important;
+      top: 110px !important;
+      width: auto !important;
+      height: auto !important;
+      bottom: 0 !important;
     }
 
     /* ── Left sidebar ── */
@@ -998,7 +1001,7 @@
       width: 310px;
       background: #111114;
       border-right: 1px solid rgba(255,255,255,0.07);
-      z-index: 500;
+      z-index: 2000;
       flex-direction: column;
       font-family: 'Bebas Neue', Arial, sans-serif;
     }
@@ -1137,6 +1140,7 @@
 
     /* ── Top camera strip ── */
     #cam-strip {
+      z-index: 600;
       display: none;
       position: fixed;
       top: 0; left: 310px; right: 300px;
@@ -1149,9 +1153,8 @@
       gap: 2px;
       align-items: stretch;
     }
-    body.cam-mode #cam-strip { display: flex; }
-    body.cam-mode #map { top: 110px; }
-    body.cam-mode #layers-toolbar { top: 110px; }
+    body.cam-mode #cam-strip { display: flex; z-index: 600; }
+    body.cam-mode #layers-toolbar { top: 110px !important; left: 320px !important; }
     #cam-strip::-webkit-scrollbar { height: 3px; }
     #cam-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
 
@@ -1228,7 +1231,7 @@
       width: 300px;
       background: #111114;
       border-left: 1px solid rgba(255,255,255,0.07);
-      z-index: 500;
+      z-index: 2000;
       flex-direction: column;
     }
     body.cam-mode #cam-right { display: flex; }
@@ -9463,20 +9466,43 @@ window.flyToAlertWithFlash = function(feature) {
   };
 
   // ── Show/Hide ──────────────────────────────────────────────
+  function applyMapLayout() {
+    const mapEl = document.getElementById('map');
+    if (!mapEl) return;
+    mapEl.style.cssText += ';left:310px!important;right:300px!important;top:110px!important;bottom:0!important;width:auto!important;height:auto!important;';
+    mapEl.style.left   = '310px';
+    mapEl.style.right  = '300px';
+    mapEl.style.top    = '110px';
+    mapEl.style.bottom = '0';
+    mapEl.style.width  = 'auto';
+    mapEl.style.height = 'auto';
+  }
+
+  function resetMapLayout() {
+    const mapEl = document.getElementById('map');
+    if (!mapEl) return;
+    mapEl.style.left   = '';
+    mapEl.style.right  = '';
+    mapEl.style.top    = '';
+    mapEl.style.bottom = '';
+    mapEl.style.width  = '';
+    mapEl.style.height = '';
+  }
+
   function showTowerCams() {
     document.body.classList.add('cam-mode');
-    // Force map resize after layout shift
-    setTimeout(() => { if (window.map && map.resize) map.resize(); }, 100);
+    applyMapLayout();
+    setTimeout(() => { if (window.map && map.resize) map.resize(); }, 150);
   }
 
   function hideTowerCams() {
     document.body.classList.remove('cam-mode');
+    resetMapLayout();
     document.getElementById('cam-strip').innerHTML = '';
     activeCams.clear();
-    // Remove all map markers
     Object.values(camMarkers).forEach(m => { try { m.remove(); } catch(e) {} });
     camMarkers = {};
-    setTimeout(() => { if (window.map && map.resize) map.resize(); }, 100);
+    setTimeout(() => { if (window.map && map.resize) map.resize(); }, 150);
   }
 
   window.camHideTowerCams = function() {
