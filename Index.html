@@ -9493,7 +9493,7 @@ window.flyToAlertWithFlash = function(feature) {
   // ── Fetch cameras from API ─────────────────────────────────
   async function fetchCameras() {
     const listEl = document.getElementById('cam-list');
-    listEl.innerHTML = '<div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.25);padding:12px 14px;">LOADING CAMERAS…</div>';
+    listEl.innerHTML = '<div style="font-family:var(--ff,Arial),Arial,sans-serif;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.25);padding:12px 14px;">LOADING CAMERAS…</div>';
 
     try {
       const res  = await fetch(CAM_API, { cache: 'no-cache' });
@@ -9510,7 +9510,7 @@ window.flyToAlertWithFlash = function(feature) {
       renderCamMarkersOnMap(allCameras);
     } catch(e) {
       console.error('[TowerCams] API error:', e);
-      listEl.innerHTML = `<div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;color:rgba(255,80,80,0.7);padding:12px 14px;">
+      listEl.innerHTML = `<div style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;color:rgba(255,80,80,0.7);padding:12px 14px;">
         ⚠ FAILED TO LOAD<br>
         <span style="font-size:10px;color:rgba(255,255,255,0.25);">${e.message}</span>
       </div>`;
@@ -9531,7 +9531,7 @@ window.flyToAlertWithFlash = function(feature) {
   function renderCamList(cams) {
     const listEl = document.getElementById('cam-list');
     if (!cams.length) {
-      listEl.innerHTML = '<div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.25);padding:12px 14px;">NO CAMERAS FOUND</div>';
+      listEl.innerHTML = '<div style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.25);padding:12px 14px;">NO CAMERAS FOUND</div>';
       return;
     }
     listEl.innerHTML = cams.map((c, i) => {
@@ -9763,7 +9763,7 @@ window.flyToAlertWithFlash = function(feature) {
     if (row) row.remove();
     if (!document.querySelector('.cam-timer-row')) {
       document.getElementById('cam-timers-list').innerHTML =
-        '<div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.2);padding:8px 14px;">No active timers</div>';
+        '<div style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.2);padding:8px 14px;">No active timers</div>';
     }
   }
 
@@ -9775,11 +9775,9 @@ window.flyToAlertWithFlash = function(feature) {
     const lines = Object.entries(camTimers).map(([id, t]) => {
       const elapsed = Math.floor((Date.now() - t.start) / 1000);
       const cam = allCameras.find(c => (c.id || allCameras.indexOf(c)) == id);
-      return `${cam ? camName(cam) : id}: ${Math.floor(elapsed/60)}m ${elapsed%60}s`;
+      return (cam ? camName(cam) : id) + ': ' + Math.floor(elapsed/60) + 'm ' + (elapsed%60) + 's';
     });
-    alert('CAMERA REPORT
-' + (lines.length ? lines.join('
-') : 'No active timers.'));
+    alert('CAMERA REPORT\n' + (lines.length ? lines.join('\n') : 'No active timers.'));
   };
 
 })();
